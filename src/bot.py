@@ -14,115 +14,115 @@ import datetime
 
 class Roboraj(object):
 
-	def __init__(self, config):
-		self.config = config
-		self.irc = irc_.irc(config)
-		self.socket = self.irc.get_irc_socket_object()
+    def __init__(self, config):
+        self.config = config
+        self.irc = irc_.irc(config)
+        self.socket = self.irc.get_irc_socket_object()
 
 
-	def run(self):
-		"""
+    def run(self):
+        """
 
-		:rtype : object
-		"""
-		irc = self.irc
-		sock = self.socket
-		config = self.config
+        :rtype : object
+        """
+        irc = self.irc
+        sock = self.socket
+        config = self.config
 
-		while True:
-			data = sock.recv(config['socket_buffer_size']).rstrip()
+        while True:
+            data = sock.recv(config['socket_buffer_size']).rstrip()
 
-			if len(data) == 0:
-				pp('Connection was lost, reconnecting.')
-				sock = self.irc.get_irc_socket_object()
+            if len(data) == 0:
+                pp('Connection was lost, reconnecting.')
+                sock = self.irc.get_irc_socket_object()
 
-			if config['debug']:
-				print data
+            if config['debug']:
+                print data
 
-			# check for ping, reply with pong
-			irc.check_for_ping(data)
+            # check for ping, reply with pong
+            irc.check_for_ping(data)
 
-			if irc.check_for_message(data):
-				message_dict = irc.get_message(data)
+            if irc.check_for_message(data):
+                message_dict = irc.get_message(data)
 
-				channel = message_dict['channel']
-				message = message_dict['message']
-				username = message_dict['username']
+                channel = message_dict['channel']
+                message = message_dict['message']
+                username = message_dict['username']
 
-				ppi(channel, message, username)
+                ppi(channel, message, username)
 
-				# check if message is a command with no arguments
-				if commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0]):
-					command = message
+                # check if message is a command with no arguments
+                if commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0]):
+                    command = message
 
-					if commands.check_returns_function(command.split(' ')[0]):
-						if commands.check_has_correct_args(command, command.split(' ')[0]):
-							args = command.split(' ')
-							del args[0]
+                    if commands.check_returns_function(command.split(' ')[0]):
+                        if commands.check_has_correct_args(command, command.split(' ')[0]):
+                            args = command.split(' ')
+                            del args[0]
 
-							command = command.split(' ')[0]
+                            command = command.split(' ')[0]
 
-							if commands.is_on_cooldown(command, channel):
-								pbot('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
-									command, username, commands.get_cooldown_remaining(command, channel)), 
-									channel
-								)
-							else:
-								pbot('Command is valid an not on cooldown. (%s) (%s)' % (
-									command, username), 
-									channel
-								)
-								
-								result = commands.pass_to_function(command, args)
-								commands.update_last_used(command, channel)
+                            if commands.is_on_cooldown(command, channel):
+                                pbot('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
+                                command, username, commands.get_cooldown_remaining(command, channel)),
+                                     channel
+                                )
+                            else:
+                                pbot('Command is valid an not on cooldown. (%s) (%s)' % (
+                                command, username),
+                                     channel
+                                )
 
-								if result:
-									resp = '(%s) > %s' % (username, result)
-									pbot(resp, channel)
-									irc.send_message(channel, resp)
+                                result = commands.pass_to_function(command, args)
+                                commands.update_last_used(command, channel)
 
-					else:
-						if commands.is_on_cooldown(command, channel):
-							pbot('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
-									command, username, commands.get_cooldown_remaining(command, channel)), 
-									channel
-							)
-						elif commands.check_has_return(command):
-							pbot('Command is valid and not on cooldown. (%s) (%s)' % (
-								command, username), 
-								channel
-							)
-							commands.update_last_used(command, channel)
+                                if result:
+                                    resp = '(%s) > %s' % (username, result)
+                                    pbot(resp, channel)
+                                    irc.send_message(channel, resp)
 
-							resp = '(%s) > %s' % (username, commands.get_return(command))
-							commands.update_last_used(command, channel)
+                    else:
+                        if commands.is_on_cooldown(command, channel):
+                            pbot('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
+                            command, username, commands.get_cooldown_remaining(command, channel)),
+                                 channel
+                            )
+                        elif commands.check_has_return(command):
+                            pbot('Command is valid and not on cooldown. (%s) (%s)' % (
+                            command, username),
+                                 channel
+                            )
+                            commands.update_last_used(command, channel)
 
-							pbot(resp, channel)
-							irc.send_message(channel, resp)
+                            resp = '(%s) > %s' % (username, commands.get_return(command))
+                            commands.update_last_used(command, channel)
+
+                            pbot(resp, channel)
+                            irc.send_message(channel, resp)
 
 #Logged in UTF-8
 class Logger(Roboraj):
-	def __init__(self, config, filename="Default.log"):
-		# this should be saved in yourlogfilename.txt
-		print "The following log is for " + str(datetime.date.today()) + ". "
-		super(Logger, self).__init__(config)
-		self.terminal = sys.stdout
-		sys.stdout = self
-		self.log = open(filename, "a")
-	def write(self, message):
-		#In the event of an error, "try", to prevent bot crash. If there is an error, print it
-		try:
-			safe_message = unicode(message).encode('utf8', 'ignore')
-			self.terminal.write(safe_message)
-			self.log.write(safe_message)
-		except Exception as err:
-			#Uncomment line below the print error to console when it occurs
-			#self.log.write("Unhandled error:\n" + str(err))
-			import traceback
-			traceback.print_exc(file=self.log)
-		#Log the console output to file as it comes in
-		finally:
-			self.log.flush()
+    def __init__(self, config, filename="Default.log"):
+        # this should be saved in yourlogfilename.txt
+        print "The following log is for " + str(datetime.date.today()) + ". "
+        super(Logger, self).__init__(config)
+        self.terminal = sys.stdout
+        sys.stdout = self
+        self.log = open(filename, "a")
+    def write(self, message):
+        #In the event of an error, "try", to prevent bot crash. If there is an error, print it
+        try:
+            safe_message = unicode(message).encode('utf8', 'ignore')
+            self.terminal.write(safe_message)
+            self.log.write(safe_message)
+        except Exception as err:
+            #Uncomment line below the print error to console when it occurs
+            #self.log.write("Unhandled error:\n" + str(err))
+            import traceback
+            traceback.print_exc(file=self.log)
+        #Log the console output to file as it comes in
+        finally:
+            self.log.flush()
 
 # this should be saved in yourlogfilename.txt
 print "The following log is for " + str(datetime.date.today()) + ". "
