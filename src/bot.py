@@ -114,5 +114,3 @@ class Logger(RoboRaj):
         finally:
             self.log.flush()
 
-# this should be saved in yourlogfilename.txt
-print "The following log is for " + str(datetime.date.today()) + ". "
