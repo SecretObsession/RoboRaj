@@ -2,8 +2,8 @@
 Simple IRC Bot for Twitch.tv
 
 Originally developed by Aidan Thomson <aidraj0@gmail.com>
-
-Forked and tweaked by Shane Engelman <me@5h4n3.com>
+Tweaks by Shane Engelman <me@5h4n3.com>
+Forked and updated by Mike Herold <archangel.herold@gmail.com>
 """
 
 import lib.irc as irc_
@@ -58,15 +58,9 @@ class RoboRaj(object):
                             command = command.split(' ')[0]
 
                             if commands.is_on_cooldown(command, channel):
-                                print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
-                                command, username, commands.get_cooldown_remaining(command, channel)),
-                                     channel
-                                )
+                                print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' % (command, username, commands.get_cooldown_remaining(command, channel)), channel)
                             else:
-                                print_bot_message('Command is valid an not on cooldown. (%s) (%s)' % (
-                                command, username),
-                                     channel
-                                )
+                                print_bot_message('Command is valid an not on cooldown. (%s) (%s)' % (command, username), channel)
 
                                 result = commands.pass_to_function(command, args)
                                 commands.update_last_used(command, channel)
@@ -95,6 +89,7 @@ class RoboRaj(object):
                             print_bot_message(resp, channel)
                             irc.send_message(channel, resp)
 
+
 #Logged in UTF-8
 class Logger(RoboRaj):
     def __init__(self, config, filename="log/bot.log"):
@@ -103,6 +98,7 @@ class Logger(RoboRaj):
         self.terminal = sys.stdout
         sys.stdout = self
         self.log = open(filename, "a+")
+
     def write(self, message):
         #In the event of an error, "try", to prevent bot crash. If there is an error, print it
         try:

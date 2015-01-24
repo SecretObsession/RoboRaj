@@ -1,4 +1,4 @@
-Roboraj
+RoboRaj
 ==========
 
 This is a simple Twitch chat/irc bot written in python.
