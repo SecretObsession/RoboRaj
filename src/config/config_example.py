@@ -2,7 +2,7 @@ global config
 
 config = {
     # details required to login to twitch IRC server
-    'server': 'irc.twitch.tv',  #twitch IRC server
+    'server': 'irc.twitch.tv',  # twitch IRC server
     'port': 6667,
     'username': 'twitch_username',
     'oauth_password': 'oauth:',  # get this from http://twitchapps.com/tmi/
