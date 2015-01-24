@@ -97,12 +97,12 @@ class RoboRaj(object):
 
 #Logged in UTF-8
 class Logger(RoboRaj):
-    def __init__(self, config, filename="bot.log"):
+    def __init__(self, config, filename="log/bot.log"):
         # this should be saved in bot.log
         super(Logger, self).__init__(config)
         self.terminal = sys.stdout
         sys.stdout = self
-        self.log = open("log/"+filename, "a+")
+        self.log = open(filename, "a+")
     def write(self, message):
         #In the event of an error, "try", to prevent bot crash. If there is an error, print it
         try:

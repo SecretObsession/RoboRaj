@@ -7,7 +7,9 @@ This is a simple Twitch chat/irc bot written in python.
 Installation
 ============
 * Open up your terminal/shell of choice.
-* Install the [http://docs.python-requests.org/en/latest/](Requests library) if you haven't already using `pip install requests`. I tested this application on Python 2.7.5.
+* Install the [http://docs.python-requests.org/en/latest/](Requests library) if you haven't already using `pip install requests`.
+* Install the [https://pypi.python.org/pypi/beautifulsoup4/](BeautifulSoup4 library) if you haven't already using `pip install beautifulsoup4`.
+* This application has been tested on Python 2.7.8.
 * 
 * Clone the Git repository.
 * Move config/config_example.py to config/config.py. Replace all of the placeholders there with your own username/oauth token/channels to join etc (tips are given in the file).
