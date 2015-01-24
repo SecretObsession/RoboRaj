@@ -60,7 +60,7 @@ class RoboRaj(object):
                             if commands.is_on_cooldown(command, channel):
                                 print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' % (command, username, commands.get_cooldown_remaining(command, channel)), channel)
                             else:
-                                print_bot_message('Command is valid an not on cooldown. (%s) (%s)' % (command, username), channel)
+                                print_bot_message('Command is valid and it is not on cooldown. (%s) (%s)' % (command, username), channel)
 
                                 result = commands.pass_to_function(command, args)
                                 commands.update_last_used(command, channel)
