@@ -4,7 +4,7 @@ import cron
 import thread
 
 
-threshold = 5 * 60 # five minutes, make this whatever you want
+threshold = 5 * 60  # five minutes, make this whatever you want
 
 class irc:
 
@@ -28,8 +28,8 @@ class irc:
 
         last_ping = time.time()
         #if data[0:4] == "PING":
-        if data.find ( 'PING' ) != -1:
-            self.sock.send( 'PONG ' + data.split() [ 1 ] + '\r\n' )
+        if data.find('PING') != -1:
+            self.sock.send('PONG ' + data.split() [ 1 ] + '\r\n')
             last_ping = time.time()
         if (time.time() - last_ping) > threshold:
             sys.exit()
@@ -71,17 +71,18 @@ class irc:
         if self.check_login_status(sock.recv(1024)):
             print_bot_status_message('Login successful.')
         else:
-            print_bot_status_message('Login unsuccessful. (hint: make sure your oauth token is set in self.config/self.config.py).', 'error')
+            print_bot_status_message(
+                'Login unsuccessful. (hint: make sure your oauth token is set in config/config.py).', 'error')
             sys.exit()
 
         # start threads for channels that have cron messages to run
         for channel in self.config['channels']:
             if channel in self.config['cron']:
                 if self.config['cron'][channel]['run_cron']:
+                    channel = channel.lower()
                     thread.start_new_thread(cron.cron(self, channel).run, ())
 
         self.join_channels(self.channels_to_string(self.config['channels']))
-
 
         return sock
 

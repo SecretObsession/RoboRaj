@@ -1,12 +1,16 @@
 global config
 
+#
+# IRC Bot example configuration
+#
+
 config = {
     # details required to login to twitch IRC server
     'server': 'irc.twitch.tv',  # twitch IRC server
     'port': 6667,
     'username': 'twitch_username',
     'oauth_password': 'oauth:',  # get this from http://twitchapps.com/tmi/
-    'channels': ['#channel_one', '#channel_two'],  # channel to join
+    'channels': ['#channel_one', '#channel_two'],  # channel to join, this must be lowercase
     'debug': False,  # if set to true will display any data received
 
     'cron':

@@ -12,12 +12,12 @@ import lib.functions_commands as commands
 import sys
 import datetime
 
-class Roboraj(object):
+
+class RoboRaj(object):
     def __init__(self, config):
         self.config = config
         self.irc = irc_.irc(config)
         self.socket = self.irc.get_irc_socket_object()
-
 
     def run(self):
         irc = self.irc
@@ -96,14 +96,13 @@ class Roboraj(object):
                             irc.send_message(channel, resp)
 
 #Logged in UTF-8
-class Logger(Roboraj):
-    def __init__(self, config, filename="Default.log"):
-        # this should be saved in yourlogfilename.txt
-        print "The following log is for " + str(datetime.date.today()) + ". "
+class Logger(RoboRaj):
+    def __init__(self, config, filename="bot.log"):
+        # this should be saved in bot.log
         super(Logger, self).__init__(config)
         self.terminal = sys.stdout
         sys.stdout = self
-        self.log = open(filename, "a")
+        self.log = open("log/"+filename, "a+")
     def write(self, message):
         #In the event of an error, "try", to prevent bot crash. If there is an error, print it
         try:
@@ -112,10 +111,10 @@ class Logger(Roboraj):
             self.log.write(safe_message)
         except Exception as err:
             #Uncomment line below the print error to console when it occurs
-            #self.log.write("Unhandled error:\n" + str(err))
+            self.log.write("Unhandled error:\n" + str(err))
             import traceback
-            traceback.print_exc(file=self.log)
-        #Log the console output to file as it comes in
+            #traceback.print_exc(file=self.log)
+            #Log the console output to file as it comes in
         finally:
             self.log.flush()
 

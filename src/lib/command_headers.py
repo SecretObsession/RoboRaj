@@ -1,12 +1,6 @@
 from src.config.config import *
 
-def addcom():
-    return "hey dude"
-
-
-
 commands = {
-
     '!commands': {
         'limit': 10,
         'argc': 0,
@@ -43,8 +37,7 @@ commands = {
 
     '!addlorenzo': {
     'limit': 5,
-    'return': addcom()
-
+    'return': 'hey dude'
     },
 
     '!dellorenzo': {
