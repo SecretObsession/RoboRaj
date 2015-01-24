@@ -27,7 +27,7 @@ class cron:
         while True:
             index = self.get_next_message()
 
-            pbot('[CRON] %s' % self.messages[index], self.channel)
+            print_bot_message('[CRON] %s' % self.messages[index], self.channel)
 
             self.irc.send_message(self.channel, self.messages[index])
 

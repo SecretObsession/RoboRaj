@@ -13,7 +13,6 @@ import sys
 import datetime
 
 class Roboraj(object):
-
     def __init__(self, config):
         self.config = config
         self.irc = irc_.irc(config)
@@ -21,10 +20,6 @@ class Roboraj(object):
 
 
     def run(self):
-        """
-
-        :rtype : object
-        """
         irc = self.irc
         sock = self.socket
         config = self.config
@@ -33,7 +28,7 @@ class Roboraj(object):
             data = sock.recv(config['socket_buffer_size']).rstrip()
 
             if len(data) == 0:
-                pp('Connection was lost, reconnecting.')
+                print_bot_status_message('Connection was lost, reconnecting.')
                 sock = self.irc.get_irc_socket_object()
 
             if config['debug']:
@@ -49,7 +44,7 @@ class Roboraj(object):
                 message = message_dict['message']
                 username = message_dict['username']
 
-                ppi(channel, message, username)
+                print_chat_message_in_html(channel, message, username)
 
                 # check if message is a command with no arguments
                 if commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0]):
@@ -63,12 +58,12 @@ class Roboraj(object):
                             command = command.split(' ')[0]
 
                             if commands.is_on_cooldown(command, channel):
-                                pbot('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
+                                print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
                                 command, username, commands.get_cooldown_remaining(command, channel)),
                                      channel
                                 )
                             else:
-                                pbot('Command is valid an not on cooldown. (%s) (%s)' % (
+                                print_bot_message('Command is valid an not on cooldown. (%s) (%s)' % (
                                 command, username),
                                      channel
                                 )
@@ -78,17 +73,17 @@ class Roboraj(object):
 
                                 if result:
                                     resp = '(%s) > %s' % (username, result)
-                                    pbot(resp, channel)
+                                    print_bot_message(resp, channel)
                                     irc.send_message(channel, resp)
 
                     else:
                         if commands.is_on_cooldown(command, channel):
-                            pbot('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
+                            print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
                             command, username, commands.get_cooldown_remaining(command, channel)),
                                  channel
                             )
                         elif commands.check_has_return(command):
-                            pbot('Command is valid and not on cooldown. (%s) (%s)' % (
+                            print_bot_message('Command is valid and not on cooldown. (%s) (%s)' % (
                             command, username),
                                  channel
                             )
@@ -97,7 +92,7 @@ class Roboraj(object):
                             resp = '(%s) > %s' % (username, commands.get_return(command))
                             commands.update_last_used(command, channel)
 
-                            pbot(resp, channel)
+                            print_bot_message(resp, channel)
                             irc.send_message(channel, resp)
 
 #Logged in UTF-8

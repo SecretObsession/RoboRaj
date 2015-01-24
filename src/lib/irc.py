@@ -59,7 +59,7 @@ class irc:
         try:
             sock.connect((self.config['server'], self.config['port']))
         except:
-            pp('Cannot connect to server (%s:%s).' % (self.config['server'], self.config['port']), 'error')
+            print_bot_status_message('Cannot connect to server (%s:%s).' % (self.config['server'], self.config['port']), 'error')
             sys.exit()
 
         sock.settimeout(None)
@@ -69,9 +69,9 @@ class irc:
         sock.send('NICK %s\r\n' % self.config['username'])
 
         if self.check_login_status(sock.recv(1024)):
-            pp('Login successful.')
+            print_bot_status_message('Login successful.')
         else:
-            pp('Login unsuccessful. (hint: make sure your oauth token is set in self.config/self.config.py).', 'error')
+            print_bot_status_message('Login unsuccessful. (hint: make sure your oauth token is set in self.config/self.config.py).', 'error')
             sys.exit()
 
         # start threads for channels that have cron messages to run
@@ -89,11 +89,11 @@ class irc:
         return ','.join(channel_list)
 
     def join_channels(self, channels):
-        pp('Joining channels %s.' % channels)
+        print_bot_status_message('Joining channels %s.' % channels)
         self.sock.send('JOIN %s\r\n' % channels)
-        pp('Joined channels.')
+        print_bot_status_message('Joined channels.')
 
     def leave_channels(self, channels):
-        pp('Leaving chanels %s,' % channels)
+        print_bot_status_message('Leaving chanels %s,' % channels)
         self.sock.send('PART %s\r\n' % channels)
-        pp('Left channels.')
+        print_bot_status_message('Left channels.')

@@ -1,24 +1,26 @@
 import time
 
-red = "\033[01;31m{0}\033[00m"
-grn = "\033[01;36m{0}\033[00m"
-blu = "\033[01;34m{0}\033[00m"
-cya = "\033[01;36m{0}\033[00m"
+console_text_color_red = "\033[01;31m{0}\033[00m"
+console_text_color_green = "\033[01;36m{0}\033[00m"
+console_text_color_blue = "\033[01;34m{0}\033[00m"
+console_text_color_cyan = "\033[01;36m{0}\033[00m"
 
 
-def pp(message, mtype='INFO'):
-    mtype = mtype.upper()
+def print_bot_status_message(message, status_type='INFO'):
+    status_type = status_type.upper()
 
-    if mtype == "ERROR":
-        mtype = red.format(mtype)
+    if status_type == "ERROR":
+        status_type = console_text_color_red.format(status_type)
 
-    print '[%s] [%s] %s' % (time.strftime('%H:%M:%S', time.gmtime()), mtype, message)
+    print '[%s] [%s] %s' % (time.strftime('%H:%M:%S', time.gmtime()), status_type, message)
 
-def ppi(channel, message, username):
+
+def print_chat_message_in_html(channel, message, username):
     print '<br><u>' + '[%s %s <strong>%s</strong>] %s' % (time.strftime('%H:%M:%S', time.gmtime()), channel, username, message) + '</u><br>'
 
-def pbot(message, channel=''):
-    if channel: msg = '[%s %s] [%s] %s' % (time.strftime('%H:%M:%S', time.gmtime()), channel, 'BOT', message)
-    else: msg = '[%s] [%s] %s' % (time.strftime('%H:%M:%S', time.gmtime()), 'BOT', message)
 
-    print msg
+def print_bot_message(message, channel=''):
+    if channel:
+        print '[%s %s] [%s] %s' % (time.strftime('%H:%M:%S', time.gmtime()), channel, 'BOT', message)
+    else:
+        print '[%s] [%s] %s' % (time.strftime('%H:%M:%S', time.gmtime()), 'BOT', message)
