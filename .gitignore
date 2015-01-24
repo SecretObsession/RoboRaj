@@ -1,6 +1,12 @@
 .DS_STORE
 *.pyc
+
+# Bot configuration
 src/config/config.py
+
+# Logs from previous Bot runs.
+log/*
+
 # Created by https://www.gitignore.io
 
 ### PyCharm ###
