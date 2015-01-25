@@ -18,7 +18,7 @@ def addtextresponse(args, commands):
 
     new_command = {
         'limit': command_cooldown,
-        'return': response_message
+        'return': response_message.lstrip()
     }
 
     # add the new command to the available commands list
