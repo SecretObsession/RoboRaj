@@ -1,3 +1,8 @@
+"""
+Developed by Shane Engelman <me@5h4n3.com>
+GitHub: <https://github.com/singlerider/lorenzotherobot>
+"""
+
 import random
 
 def opinion():

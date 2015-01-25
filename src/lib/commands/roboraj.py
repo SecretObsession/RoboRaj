@@ -1,10 +1,6 @@
 """
-Written by: Mike Herold <archangel.herold@gmail.com> <github.com/SecretObsession/>
-
-RoboRaj command handler.
-If a admin wants RoboRaj to run a task
--Update emotes from Twitch API
--Remove/Activate commands
+Developed by Mike Herold <archangel.herold@gmail.com>
+GitHub: <https://github.com/secretobsession/twitch-bot>
 """
 
 from src.config.config import *

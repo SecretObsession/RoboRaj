@@ -1,7 +1,6 @@
 """
-Add Text Response
-
-Written by Mike Herold <archangel.herold@gmail.com> <github.com/SecretObsession/>
+Developed by Mike Herold <archangel.herold@gmail.com>
+GitHub: <https://github.com/secretobsession/twitch-bot>
 """
 
 # The list of commands needs to be imported so it can be updated to include the new command

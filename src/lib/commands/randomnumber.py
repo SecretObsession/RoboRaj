@@ -1,3 +1,8 @@
+"""
+Developed by Aiden
+GitHub: <https://github.com/aidraj>
+"""
+
 import random
 import time
 

@@ -1,4 +1,8 @@
 # coding: utf8
+"""
+Developed by Shane Engelman <me@5h4n3.com>
+GitHub: <https://github.com/singlerider/lorenzotherobot>
+"""
 from BeautifulSoup import BeautifulStoneSoup
 import urllib
 

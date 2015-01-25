@@ -1,3 +1,8 @@
+"""
+Developed by Aiden
+GitHub: <https://github.com/aidraj>
+"""
+
 from src.lib.command import Command
 from src.config.config import *
 

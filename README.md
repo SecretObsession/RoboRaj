@@ -10,7 +10,7 @@ Installation
 * Install the [http://docs.python-requests.org/en/latest/](Requests library) if you haven't already using `pip install requests`.
 * Install the [https://pypi.python.org/pypi/beautifulsoup4/](BeautifulSoup4 library) if you haven't already using `pip install beautifulsoup4`.
 * This application has been tested on Python 2.7.8.
-* 
+
 * Clone the Git repository.
 * Move config/config_example.py to config/config.py. Replace all of the placeholders there with your own username/oauth token/channels to join etc (tips are given in the file).
 * Type `chmod +x /serve.py`. To run, you simply need to execute the file by typing `./serve.py`.
@@ -19,7 +19,7 @@ Installation
 Adding your own commands
 ========================
 
-You're going to need to know basic Python if you want to add your own commands. Open up `lib/command_headers.py`. There are examples of pre-made commands in there as examples. The limit parameter is the amount of times a command can be used in seconds, if you don't want a limit to be enforced put in 0.
+You're going to need to know basic Python if you want to add your own commands. Open up `res/commands.json`. There are examples of pre-made commands in there as examples. The limit parameter is the amount of times a command can be used in seconds, if you don't want a limit to be enforced put in 0.
 
 If your command is only going to return a string, ex - `!hello` returns `Welcome!`, don't include the `argc` parameter. Place the string you wish to be returned to the user in the `return` parameter. For example, if you wanted to create a command such as this and limit it to being used ever 30 seconds, you would add in:
 
