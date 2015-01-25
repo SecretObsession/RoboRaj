@@ -1,5 +1,8 @@
-import src.lib.command_headers as headers
+from src.lib.command import Command
+from src.config.config import *
 
 def commands():
     usage = '!commands'
-    return ", ".join(sorted(headers.commands))
+    commands_dict = Command(config).get_commands()
+
+    return ", ".join(sorted(commands_dict))

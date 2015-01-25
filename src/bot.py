@@ -8,7 +8,7 @@ Forked and updated by Mike Herold <archangel.herold@gmail.com>
 
 import lib.irc as irc_
 from lib.functions_general import *
-import lib.functions_commands as commands
+from lib.command import Command
 import sys
 import datetime
 
@@ -18,8 +18,8 @@ class RoboRaj(object):
         self.config = config
         self.irc = irc_.IRC(config)
         self.socket = self.irc.get_irc_socket_object()
-        commands.load_commands_from_cache()
-        commands.generate_last_used()
+        self.command_class = Command(self.config)
+        self.commands_dict = self.command_class.get_commands()
 
     def run(self):
         irc = self.irc
@@ -49,23 +49,23 @@ class RoboRaj(object):
                 print_chat_message_in_html(channel, message, username)
 
                 # check if message is a command with no arguments
-                if commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0]):
+                if self.command_class.is_valid_command(message) or self.command_class.is_valid_command(message.split(' ')[0]):
                     command = message
 
-                    if commands.check_returns_function(command.split(' ')[0]):
-                        if commands.check_has_correct_args(command, command.split(' ')[0]):
+                    if self.command_class.check_returns_function(command.split(' ')[0]):
+                        if self.command_class.check_has_correct_args(command, command.split(' ')[0]):
                             args = command.split(' ')
                             del args[0]
 
                             command = command.split(' ')[0]
 
-                            if commands.is_on_cooldown(command, channel):
-                                print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' % (command, username, commands.get_cooldown_remaining(command, channel)), channel)
+                            if self.command_class.is_on_cooldown(command, channel):
+                                print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' % (command, username, self.command_class.get_cooldown_remaining(command, channel)), channel)
                             else:
                                 print_bot_message('Command is valid and it is not on cooldown. (%s) (%s)' % (command, username), channel)
 
-                                result = commands.pass_to_function(command, args)
-                                commands.update_last_used(command, channel)
+                                result = self.command_class.pass_to_function(command, args)
+                                self.command_class.update_last_used(command, channel)
 
                                 if result:
                                     resp = '(%s) > %s' % (username, result)
@@ -73,20 +73,21 @@ class RoboRaj(object):
                                     irc.send_message(channel, resp)
 
                     else:
-                        if commands.is_on_cooldown(command, channel):
-                            print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
-                            command, username, commands.get_cooldown_remaining(command, channel)),
-                                 channel
+                        if self.command_class.is_on_cooldown(command, channel):
+                            print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' %
+                                              (command,
+                                               username,
+                                               self.command_class.get_cooldown_remaining(command, channel)), channel
                             )
-                        elif commands.check_has_return(command):
+                        elif self.command_class.check_has_return(command):
                             print_bot_message('Command is valid and not on cooldown. (%s) (%s)' % (
                             command, username),
                                  channel
                             )
-                            commands.update_last_used(command, channel)
+                            self.command_class.update_last_used(command, channel)
 
-                            resp = '(%s) > %s' % (username, commands.get_return(command))
-                            commands.update_last_used(command, channel)
+                            resp = '(%s) > %s' % (username, self.command_class.get_return(command))
+                            self.command_class.update_last_used(command, channel)
 
                             print_bot_message(resp, channel)
                             irc.send_message(channel, resp)
