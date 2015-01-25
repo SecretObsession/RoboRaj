@@ -1,9 +1,10 @@
 # coding: utf8
 
-import random, json
+import random
+import json
+
 
 def randomemote():
-
     filename = 'src/res/global_emotes.json'
 
     try:
@@ -13,7 +14,4 @@ def randomemote():
 
     emote = random.choice(data.keys())
 
-    return '%s = %s' % (
-    emote,
-    emote[:1] + '​'.decode('utf8') + emote[1:]
-    )
+    return '%s = %s' % (emote, emote[:1] + '​'.decode('utf8') + emote[1:])
