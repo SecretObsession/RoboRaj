@@ -4,10 +4,10 @@ import cron
 import thread
 
 
-threshold = 5 * 60  # five minutes, make this whatever you want
+ping_no_response_threshold = 5 * 60  # five minutes, make this whatever you want
+
 
 class irc:
-
     def __init__(self, config):
         self.config = config
 
@@ -31,7 +31,7 @@ class irc:
         if data.find('PING') != -1:
             self.sock.send('PONG ' + data.split() [ 1 ] + '\r\n')
             last_ping = time.time()
-        if (time.time() - last_ping) > threshold:
+        if (time.time() - last_ping) > ping_no_response_threshold:
             sys.exit()
 
     def get_message(self, data):
