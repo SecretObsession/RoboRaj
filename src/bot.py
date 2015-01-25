@@ -16,8 +16,10 @@ import datetime
 class RoboRaj(object):
     def __init__(self, config):
         self.config = config
-        self.irc = irc_.irc(config)
+        self.irc = irc_.IRC(config)
         self.socket = self.irc.get_irc_socket_object()
+        commands.load_commands_from_cache()
+        commands.generate_last_used()
 
     def run(self):
         irc = self.irc

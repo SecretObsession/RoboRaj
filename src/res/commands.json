@@ -1,0 +1,37 @@
+{
+    "!addtextresponse": {
+        "argc": 2,
+        "limit": 10,
+        "return": "command"
+    },
+    "!commands": {
+        "argc": 0,
+        "limit": 10,
+        "return": "command"
+    },
+    "!opinion": {
+        "argc": 0,
+        "limit": 0,
+        "return": "command"
+    },
+    "!pokemon": {
+        "argc": 0,
+        "limit": 0,
+        "return": "command"
+    },
+    "!randomnumber": {
+        "argc": 0,
+        "limit": 0,
+        "return": "command"
+    },
+    "!weather": {
+        "argc": 2,
+        "limit": 10,
+        "return": "command"
+    },
+    "!wow": {
+        "argc": 3,
+        "limit": 0,
+        "return": "command"
+    }
+}

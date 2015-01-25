@@ -7,7 +7,7 @@ import thread
 ping_no_response_threshold = 5 * 60  # five minutes, make this whatever you want
 
 
-class irc:
+class IRC:
     def __init__(self, config):
         self.config = config
 
@@ -25,7 +25,6 @@ class irc:
             return True
 
     def check_for_ping(self, data):
-
         last_ping = time.time()
         #if data[0:4] == "PING":
         if data.find('PING') != -1:
