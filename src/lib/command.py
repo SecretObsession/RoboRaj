@@ -19,6 +19,13 @@ class Command():
     def get_commands(self):
         return self.commands
 
+    def remove_command(self, command):
+        del self.commands[command]
+        #update json cache
+        self.save_command_memory()
+        self.load_commands_from_cache()
+        return True
+
     def generate_last_used(self):
         for channel in self.config['channels']:
             for command in self.commands:
