@@ -24,7 +24,7 @@ You're going to need to know basic Python if you want to add your own commands. 
 If your command is only going to return a string, ex - `!hello` returns `Welcome!`, don't include the `argc` parameter. Place the string you wish to be returned to the user in the `return` parameter. For example, if you wanted to create a command such as this and limit it to being used ever 30 seconds, you would add in:
 
 ```JSON
-'!hello': {'limit': 10, 'return': 'Welcome!'}
+'!hello': {'limit': 10, 'user_level': 'user', 'return': 'Welcome!'}
 ```
 
 However, if your command has to have some logic implemented and if the command is just going to return whatever a function returns, set the `return` parameter on the command to `command`, and set `argc` to `0`. If your command is going to take arguments, ex `!hello <name>`, set argc to `1` or however many arguments the command is going to take in.
@@ -38,7 +38,7 @@ Let's say we want to add a command which will take two arguments, we will call i
 Add the following to the `commands` dictionary:
 
 ```JSON
-'!random': {'limit': 20, 'argc': 2, 'return': 'command'}
+'!random': {'limit': 20, 'user_level': 'user', 'argc': 2, 'return': 'command'}
 ```
 
 And then in `lib/commands/random.py` , write the following: 
@@ -62,3 +62,15 @@ def random(args):
 ```
 
 And now if somebody types `!random 5 10` into the chat, the bot will respond with a pseudo-random number between 5 and 10.
+
+
+User Levels
+===========
+If you want to configure a command to only work for certain user groups, you can specify it in the "user_level" field
+in the command JSON.
+
+There are 3 configurable user levels for commands.
+'admin', 'mod', and 'user'
+
+Configuring which users belong in which group can be specified in the "config.py" file. 
+(NOTE: If you want an admin to also have mod rights, include the username in the "mod" group.)
