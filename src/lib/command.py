@@ -16,6 +16,21 @@ class Command():
         if command in self.commands:
             return True
 
+    def get_command_user_level(self, command):
+        return self.commands[command]['user_level']
+
+    def is_authorized(self, required_user_level, username):
+        if required_user_level == "user":
+            return True
+        try:
+            user_group_config = self.config['user_groups'][required_user_level]
+            if username in user_group_config['username']:
+                return True
+            else:
+                return False
+        except KeyError:
+            return False
+
     def get_commands(self):
         return self.commands
 

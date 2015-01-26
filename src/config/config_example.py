@@ -13,6 +13,24 @@ config = {
     'channels': ['#channel_one', '#channel_two'],  # channel to join, this must be lowercase
     'debug': False,  # if set to true will display any data received
 
+    'user_groups':
+    {
+        'admin':
+        {
+            'username': [
+                'channel_admin_username1',
+                'channel_admin_username2'
+            ]
+        },
+        'mod':
+        {
+            'username': [
+                'channel_mod_username1',
+                'channel_mod_username2'
+            ]
+        }
+    },
+
     'cron':
     {
         '#channel_one':
