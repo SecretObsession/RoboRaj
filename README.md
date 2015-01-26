@@ -23,11 +23,8 @@ You're going to need to know basic Python if you want to add your own commands. 
 
 If your command is only going to return a string, ex - `!hello` returns `Welcome!`, don't include the `argc` parameter. Place the string you wish to be returned to the user in the `return` parameter. For example, if you wanted to create a command such as this and limit it to being used ever 30 seconds, you would add in:
 
-```python
-'!hello': {
-		'limit': 10,
-		'return': 'Welcome!'
-}
+```JSON
+'!hello': {'limit': 10, 'return': 'Welcome!'}
 ```
 
 However, if your command has to have some logic implemented and if the command is just going to return whatever a function returns, set the `return` parameter on the command to `command`, and set `argc` to `0`. If your command is going to take arguments, ex `!hello <name>`, set argc to `1` or however many arguments the command is going to take in.
@@ -40,12 +37,8 @@ Let's say we want to add a command which will take two arguments, we will call i
 
 Add the following to the `commands` dictionary:
 
-```python
-'!random': {
-		'limit': 20,
-		'argc': 2,
-		'return': 'command'
-}
+```JSON
+'!random': {'limit': 20, 'argc': 2, 'return': 'command'}
 ```
 
 And then in `lib/commands/random.py` , write the following: 
