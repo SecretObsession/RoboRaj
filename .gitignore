@@ -3,6 +3,7 @@
 
 # Bot configuration
 src/config/config.py
+src/res/commands.json
 
 # Logs from previous Bot runs.
 log/*
