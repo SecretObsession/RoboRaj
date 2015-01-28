@@ -15,10 +15,6 @@ def print_bot_status_message(message, status_type='INFO'):
     print '[%s] [%s] %s' % (time.strftime('%H:%M:%S', time.gmtime()), status_type, message)
 
 
-def print_chat_message_in_html(channel, message, username):
-    print '<br><u>' + '[%s %s <strong>%s</strong>] %s' % (time.strftime('%H:%M:%S', time.gmtime()), channel, username, message) + '</u><br>'
-
-
 def print_bot_message(message, channel=''):
     if channel:
         print '[%s %s] [%s] %s' % (time.strftime('%H:%M:%S', time.gmtime()), channel, 'BOT', message)

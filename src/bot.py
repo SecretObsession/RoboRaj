@@ -51,8 +51,6 @@ class RoboRaj(object):
 
                 self.messages_class.store_message(channel, username, message, timestamp)
 
-                print_chat_message_in_html(channel, message, username)
-
                 # check if message is a command with no arguments
                 if self.command_class.is_valid_command(message) or self.command_class.is_valid_command(message.split(' ')[0]):
                     command = message
@@ -100,7 +98,9 @@ class RoboRaj(object):
                                 print_bot_message(resp, channel)
                                 irc.send_message(channel, resp)
                     else:
+                        resp = '(%s) > %s' % (username, "User not authorized to run command")
                         irc.send_message(channel, "User not authorized")
+                        print_bot_message(resp, channel)
 
 
 #Logged in UTF-8
