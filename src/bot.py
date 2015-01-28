@@ -21,7 +21,7 @@ class RoboRaj(object):
         self.socket = self.irc.get_irc_socket_object()
         self.command_class = Command(self.config)
         self.commands_dict = self.command_class.get_commands()
-        self.messages_class = Messages(save_type="sqlite")
+        self.messages_class = Messages(save_type="html")
 
     def run(self):
         irc = self.irc
