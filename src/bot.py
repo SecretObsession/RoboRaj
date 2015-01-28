@@ -9,8 +9,9 @@ Forked and updated by Mike Herold <archangel.herold@gmail.com>
 import lib.irc as irc_
 from lib.functions_general import *
 from lib.command import Command
+from lib.messages import Messages
 import sys
-import datetime
+import time
 
 
 class RoboRaj(object):
@@ -20,6 +21,7 @@ class RoboRaj(object):
         self.socket = self.irc.get_irc_socket_object()
         self.command_class = Command(self.config)
         self.commands_dict = self.command_class.get_commands()
+        self.messages_class = Messages(save_type="sqlite")
 
     def run(self):
         irc = self.irc
@@ -42,9 +44,12 @@ class RoboRaj(object):
             if irc.check_for_message(data):
                 message_dict = irc.get_message(data)
 
+                timestamp = time.time()
                 channel = message_dict['channel']
                 message = message_dict['message']
                 username = message_dict['username']
+
+                self.messages_class.store_message(channel, username, message, timestamp)
 
                 print_chat_message_in_html(channel, message, username)
 
