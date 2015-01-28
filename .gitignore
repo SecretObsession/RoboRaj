@@ -6,7 +6,7 @@ src/config/config.py
 
 # Logs from previous Bot runs.
 log/*
-res/messages.db
+src/res/messages.db
 
 # Created by https://www.gitignore.io
 
