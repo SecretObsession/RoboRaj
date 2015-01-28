@@ -12,16 +12,18 @@ from lib.command import Command
 from lib.messages import Messages
 import sys
 import time
+import logging
 
 
-class RoboRaj(object):
-    def __init__(self, config):
+class RoboRaj():
+    def __init__(self, config, log_filename="log/bot.log"):
         self.config = config
         self.irc = irc_.IRC(config)
         self.socket = self.irc.get_irc_socket_object()
         self.command_class = Command(self.config)
         self.commands_dict = self.command_class.get_commands()
         self.messages_class = Messages(save_type="html")
+        logging.basicConfig(filename=log_filename, level=logging.DEBUG)
 
     def run(self):
         irc = self.irc
@@ -32,11 +34,11 @@ class RoboRaj(object):
             data = sock.recv(config['socket_buffer_size']).rstrip()
 
             if len(data) == 0:
-                print_bot_status_message('Connection was lost, reconnecting.')
+                logging.error('Connection was lost, reconnecting.')
                 sock = self.irc.get_irc_socket_object()
 
             if config['debug']:
-                print data
+                logging.debug(data)
 
             # check for ping, reply with pong
             irc.check_for_ping(data)
@@ -49,6 +51,7 @@ class RoboRaj(object):
                 message = message_dict['message']
                 username = message_dict['username']
 
+                logging.debug("channel: %s | username: %s | message: %s" % (channel, username, message))
                 self.messages_class.store_message(channel, username, message, timestamp)
 
                 # check if message is a command with no arguments
@@ -66,9 +69,12 @@ class RoboRaj(object):
                                 command = command.split(' ')[0]
 
                                 if self.command_class.is_on_cooldown(command, channel):
-                                    print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' % (command, username, self.command_class.get_cooldown_remaining(command, channel)), channel)
+                                    cooldown_remaining = self.command_class.get_cooldown_remaining(command, channel)
+                                    logging.info('Command is on cooldown. (%s) (%s) (%ss remaining)'
+                                                 % (command, username, cooldown_remaining))
                                 else:
-                                    print_bot_message('Command is valid and it is not on cooldown. (%s) (%s)' % (command, username), channel)
+                                    logging.info('Command is valid and it is not on cooldown. (%s) (%s)'
+                                                 % (command, username))
 
                                     result = self.command_class.pass_to_function(command, args)
                                     self.command_class.update_last_used(command, channel)
@@ -80,16 +86,11 @@ class RoboRaj(object):
 
                         else:
                             if self.command_class.is_on_cooldown(command, channel):
-                                print_bot_message('Command is on cooldown. (%s) (%s) (%ss remaining)' %
-                                                  (command,
-                                                   username,
-                                                   self.command_class.get_cooldown_remaining(command, channel)), channel
-                                )
+                                logging.info('Command is on cooldown. (%s) (%s) (%ss remaining)'
+                                             % (command, username, self.command_class.get_cooldown_remaining(command, channel)))
                             elif self.command_class.check_has_return(command):
-                                print_bot_message('Command is valid and not on cooldown. (%s) (%s)' % (
-                                command, username),
-                                     channel
-                                )
+                                logging.info('Command is valid and not on cooldown. (%s) (%s) (%s)'
+                                             % (command, username, channel))
                                 self.command_class.update_last_used(command, channel)
 
                                 resp = '(%s) > %s' % (username, self.command_class.get_return(command))
@@ -100,30 +101,4 @@ class RoboRaj(object):
                     else:
                         resp = '(%s) > %s' % (username, "User not authorized to run command")
                         irc.send_message(channel, "User not authorized")
-                        print_bot_message(resp, channel)
-
-
-#Logged in UTF-8
-class Logger(RoboRaj):
-    def __init__(self, config, filename="log/bot.log"):
-        # this should be saved in bot.log
-        super(Logger, self).__init__(config)
-        self.terminal = sys.stdout
-        sys.stdout = self
-        self.log = open(filename, "a+")
-
-    def write(self, message):
-        #In the event of an error, "try", to prevent bot crash. If there is an error, print it
-        try:
-            safe_message = unicode(message).encode('utf8', 'ignore')
-            self.terminal.write(safe_message)
-            self.log.write(safe_message)
-        except Exception as err:
-            #Uncomment line below the print error to console when it occurs
-            self.log.write("Unhandled error:\n" + str(err))
-            import traceback
-            #traceback.print_exc(file=self.log)
-            #Log the console output to file as it comes in
-        finally:
-            self.log.flush()
-
+                        logging.info(resp)
