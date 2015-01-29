@@ -20,7 +20,7 @@ class Messages():
     def store_message(self, channel, username, message, timestamp):
         self.message_history[time] = {"channel": channel, "username": username, "message": message, "time": timestamp}
         if self.save_type == "sqlite":
-            self.save_message_sqlite(channel, username, message.encode('utf-8'), timestamp)
+            self.save_message_sqlite(channel, username, message, timestamp)
         if self.save_type == "html":
             self.save_message_html(channel, username, message.encode('utf-8'), timestamp)
         if self.save_type == "log":

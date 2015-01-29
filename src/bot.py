@@ -22,8 +22,11 @@ class RoboRaj():
         self.socket = self.irc.get_irc_socket_object()
         self.command_class = Command(self.config)
         self.commands_dict = self.command_class.get_commands()
-        self.messages_class = Messages(save_type="log")
-        logging.basicConfig(filename=log_filename, level=logging.DEBUG)
+        self.messages_class = Messages(save_type="sqlite")
+        logging.basicConfig(filename=log_filename,
+                            level=logging.DEBUG,
+                            format='%(asctime)s %(message)s',
+                            datefmt='%m/%d/%Y %I:%M:%S %p')
 
     def run(self):
         irc = self.irc
@@ -37,9 +40,6 @@ class RoboRaj():
                 logging.error('Connection was lost, reconnecting.')
                 sock = self.irc.get_irc_socket_object()
 
-            if config['debug']:
-                logging.debug(data)
-
             # check for ping, reply with pong
             irc.check_for_ping(data)
 
@@ -51,7 +51,9 @@ class RoboRaj():
                 message = message_dict['message']
                 username = message_dict['username']
 
-                logging.debug("channel: %s | username: %s | message: %s" % (channel, username, message))
+                if config['debug']:
+                    logging.debug("channel: %s | username: %s | message: %s" % (channel, username, message))
+
                 self.messages_class.store_message(channel, username, message, timestamp)
 
                 # check if message is a command with no arguments
@@ -60,6 +62,9 @@ class RoboRaj():
                     only_command = command.split(' ')[0]
                     command_user_level = self.command_class.get_command_user_level(only_command)
 
+                    if config['debug']:
+                        logging.debug("command_class: %s", command_user_level)
+
                     if self.command_class.is_authorized(command_user_level, username):
                         if self.command_class.check_returns_function(command.split(' ')[0]):
                             if self.command_class.check_has_correct_args(command, command.split(' ')[0]):
@@ -67,15 +72,13 @@ class RoboRaj():
                                 del args[0]
 
                                 command = command.split(' ')[0]
-
                                 if self.command_class.is_on_cooldown(command, channel):
                                     cooldown_remaining = self.command_class.get_cooldown_remaining(command, channel)
-                                    logging.info('Command is on cooldown. (%s) (%s) (%ss remaining)'
+                                    logging.info('Command (%s) is on cooldown for user (%s) (%ss remaining)'
                                                  % (command, username, cooldown_remaining))
                                 else:
-                                    logging.info('Command is valid and it is not on cooldown. (%s) (%s)'
+                                    logging.info('Command (%s) received by user (%s)'
                                                  % (command, username))
-
                                     result = self.command_class.pass_to_function(command, args)
                                     self.command_class.update_last_used(command, channel)
 
@@ -83,13 +86,12 @@ class RoboRaj():
                                         resp = '(%s) > %s' % (username, result)
                                         print_bot_message(resp, channel)
                                         irc.send_message(channel, resp)
-
                         else:
                             if self.command_class.is_on_cooldown(command, channel):
-                                logging.info('Command is on cooldown. (%s) (%s) (%ss remaining)'
+                                logging.info('Command (%s) is on cooldown for user (%s) (%ss remaining)'
                                              % (command, username, self.command_class.get_cooldown_remaining(command, channel)))
                             elif self.command_class.check_has_return(command):
-                                logging.info('Command is valid and not on cooldown. (%s) (%s) (%s)'
+                                logging.info('Command (%s) received by user (%s) on channel (%s)'
                                              % (command, username, channel))
                                 self.command_class.update_last_used(command, channel)
 
