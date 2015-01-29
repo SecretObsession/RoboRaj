@@ -3,7 +3,6 @@ Message class to handle storage of chat messages
 """
 import sqlite3
 import time
-import logging
 
 
 class Messages():
@@ -17,10 +16,6 @@ class Messages():
             self.html = ""
             self.html_page = "log/messages.html"
             self.build_html_header()
-        elif save_type == "log":
-            FORMAT = '%(asctime)-15s: %(message)s'
-            logging.basicConfig(filename="log/messages.log", level=logging.DEBUG, format=FORMAT)
-            self.log = logging.getLogger("chatmessages")
 
     def store_message(self, channel, username, message, timestamp):
         self.message_history[time] = {"channel": channel, "username": username, "message": message, "time": timestamp}
@@ -29,7 +24,7 @@ class Messages():
         if self.save_type == "html":
             self.save_message_html(channel, username, message.encode('utf-8'), timestamp)
         if self.save_type == "log":
-            self.save_message_log(channel, username, message.encode('utf-8'))
+            self.save_message_log(channel, username, message.encode('utf-8'), timestamp)
 
     def create_sqlite_database(self):
         cursor = self.conn.cursor()
@@ -64,8 +59,14 @@ class Messages():
         self.conn.commit()
         cursor.close()
 
-    def save_message_log(self, channel, username, message):
-        self.log.info('Channel: %s | User: %s > %s' % (channel, username, message))
+    def save_message_log(self, channel, username, message, timestamp):
+        message_file = open("log/messages.log", "a+")
+        message_file.writelines("%s | %s | %s | %s \n"
+                                % (time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime(timestamp)),
+                                   channel,
+                                   username,
+                                   message))
+        message_file.close()
 
     def clear_message_history(self):
         self.message_history = {}

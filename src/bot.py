@@ -23,7 +23,7 @@ class RoboRaj():
         self.command_class = Command(self.config)
         self.commands_dict = self.command_class.get_commands()
         self.messages_class = Messages(save_type="log")
-        logging.basicConfig(filename=log_filename, level=logging.ERROR)
+        logging.basicConfig(filename=log_filename, level=logging.DEBUG)
 
     def run(self):
         irc = self.irc
@@ -99,6 +99,5 @@ class RoboRaj():
                                 print_bot_message(resp, channel)
                                 irc.send_message(channel, resp)
                     else:
-                        resp = '(%s) > %s' % (username, "User not authorized to run command")
                         irc.send_message(channel, "User not authorized")
-                        logging.info(resp)
+                        logging.info("(%s) Not authorized to run command." % (username,))
