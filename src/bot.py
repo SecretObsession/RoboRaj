@@ -79,7 +79,7 @@ class RoboRaj():
                                 else:
                                     logging.info('Command (%s) received by user (%s)'
                                                  % (command, username))
-                                    result = self.command_class.pass_to_function(command, args)
+                                    result = self.command_class.pass_to_function(command, args, channel)
                                     self.command_class.update_last_used(command, channel)
 
                                     if result:
