@@ -105,21 +105,21 @@ class Command():
         if self.commands[command]['return'] == 'command':
             return True
 
-    def pass_to_function(self, command, args):
-        try:
-            command = command.replace('!', '')
-            module = importlib.import_module('src.lib.commands.%s' % command)
-            reload(module)
-            function = getattr(module, command)
-            if args:
-                if command == "addtextresponse":
-                    response = function(args, self.commands)
-                    self.save_command_memory()
-                    return response
-                # need to reference to src.lib.commands.<command
-                return function(args)
-            else:
-                # need to reference to src.lib.commands.<command
-                return function()
-        except:
-            return 'Command Unavailable'
+    def pass_to_function(self, command, args, channel):
+        command = command.replace('!', '')
+        module = importlib.import_module('src.lib.commands.%s' % command)
+        reload(module)
+        function = getattr(module, command)
+        if args:
+            if command == "addtextresponse":
+                response = function(args, self.commands)
+                self.save_command_memory()
+                return response
+            # need to reference to src.lib.commands.<command
+            return function(args)
+        else:
+            if command == "followers":
+                response = function(channel.replace('#', ''))
+                return response
+            # need to reference to src.lib.commands.<command
+            return function()
