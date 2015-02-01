@@ -45,19 +45,22 @@ class RoboRaj():
             for data_event in data.splitlines():
                 event_data = irc_stream.process_data(data_event)
 
+                """
+                Actions for when data is received on on the open IRC socket.
+                """
                 if irc_stream.is_join_message(event_data):
                     self.Users.add_to_channel(username=event_data['info']['username'],
                                               channel=event_data['info']['channel'])
-                elif irc_stream.is_part(event_data):
+                elif irc_stream.is_part_message(event_data):
                     self.Users.remove_from_channel(username=event_data['info']['username'],
                                                    channel=event_data['info']['channel'])
                 elif irc_stream.is_mode_message(event_data):
                     channel = event_data['info']['channel']
                     username = event_data['info']['username']
                     if event_data['info']['status'] == 'op':
-                        self.Users.mod_user(channel=channel, username=username)
+                        self.Users.update_mod_status(channel=channel, username=username, status=True)
                     if event_data['info']['status'] == 'deop':
-                        self.Users.unmod_user(channel=channel, username=username)
+                        self.Users.update_mod_status(channel=channel, username=username, status=False)
                 elif irc_stream.is_list_message(event_data):
                     for user_info in event_data['info']['users']:
                         self.Users.add_to_channel(username=user_info["username"], channel=event_data['info']['channel'])

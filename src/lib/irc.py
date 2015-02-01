@@ -12,49 +12,79 @@ class IRC:
         self.config = config
         self.sock = None
 
+    """
+     'data' is data received by IRC socket
+    """
     def process_data(self, data):
         data_split = data.split(" ")
 
-        # When the IRC client connects to a channel.
+        """
+        Mapping and parsed results.
+        """
         if "PRIVMSG" in data_split[1]:
+            """
+            Message in channel.
+            """
             event_information = {
                 'event': 'message',
                 'info': self.parse_message(data)
             }
             return event_information
         elif "PING" in data_split[0]:
+            """
+            IRC server keep-alive
+            """
+            #respond to ping to keep connection alive
+            self.sock.send('PONG ' + data.split()[1] + '\r\n')
             event_information = {
                 'event': 'ping'
             }
+
             return event_information
         elif "PART" in data_split[1]:
+            """
+            User leaves channel
+            """
             event_information = {
                 'event': 'part',
                 'info': self.parse_part(data)
             }
             return event_information
         elif "JOIN" in data_split[1]:
+            """
+            User joins channel
+            """
             event_information = {
                 'event': 'join',
                 'info': self.parse_join(data)
             }
             return event_information
         elif "MODE" in data_split[1]:
+            """
+            op/deop messages.
+            """
             event_information = {
                 'event': 'mode',
                 'info': self.parse_mode(data)
             }
             return event_information
         elif "353" in data_split[1]:
+            """
+            After join 353, lists all users connected to channel.
+            """
             event_information = {
                 'event': 'list',
                 'info': self.parse_channel_user_list(data)
             }
             return event_information
         else:
+            """
+            If the message received isn't in the Mapping flow.
+            """
             return {'event': 'unknown'}
 
-    def parse_channel_user_list(self, data):
+    @staticmethod
+    def parse_channel_user_list(data):
         data_split = data.split("=")[1].lstrip().split(" ")
         channel = data_split[0]
 
@@ -63,9 +93,11 @@ class IRC:
         for user in data_split[1:]:
             user = user.lstrip(":")
             event_info['users'].append({'username': user})
+
         return event_info
 
-    def parse_mode(self, data):
+    @staticmethod
+    def parse_mode(data):
         status = ''
         if '+o' in data.split(" ")[3]:
             status = "op"
@@ -80,17 +112,19 @@ class IRC:
             'username': username
         }
 
-    def parse_part(self, data):
+    @staticmethod
+    def parse_part(data):
         nickname = data.split("!")[0].lstrip(":").rstrip('\r')
         username = data.split("!")[1].split("@")[0].rstrip('\r')
-        channel = re.findall(r'PART #(.+)', data)[0]
+        channel = re.findall(r'PART (.+)', data)[0]
         return {
             'nickname': nickname,
             'username': username,
             'channel': channel
         }
 
-    def parse_join(self, data):
+    @staticmethod
+    def parse_join(data):
         nickname = data.split("!")[0].lstrip(":").rstrip('\r')
         username = data.split("!")[1].split("@")[0].rstrip('\r')
         channel = re.findall(r'JOIN (.+)', data)[0]
@@ -100,23 +134,16 @@ class IRC:
             'channel': channel
         }
 
-    def parse_ping(self, data):
-        last_ping = time.time()
-        #if data[0:4] == "PING":
-        if data.find('PING') != -1:
-            self.sock.send('PONG ' + data.split()[1] + '\r\n')
-            last_ping = time.time()
-        if (time.time() - last_ping) > ping_no_response_threshold:
-            sys.exit()
-
-    def parse_message(self, data):
+    @staticmethod
+    def parse_message(data):
         return {
             'channel': re.findall(r'^:.+\![a-zA-Z0-9_]+@[a-zA-Z0-9_]+.+ PRIVMSG (.*?) :', data)[0],
             'username': re.findall(r'^:([a-zA-Z0-9_]+)\!', data)[0],
             'message': re.findall(r'PRIVMSG #[a-zA-Z0-9_]+ :(.+)', data)[0].decode('utf8')
         }
 
-    def is_priv_message(self, event):
+    @staticmethod
+    def is_priv_message(event):
         try:
             if event['event'] == 'message':
                 return True
@@ -125,7 +152,8 @@ class IRC:
         except KeyError:
             return False
 
-    def is_list_message(self, event):
+    @staticmethod
+    def is_list_message(event):
         try:
             if event['event'] == 'list':
                 return True
@@ -134,7 +162,8 @@ class IRC:
         except KeyError:
             return False
 
-    def is_join_message(self, event):
+    @staticmethod
+    def is_join_message(event):
         try:
             if event['event'] == 'join':
                 return True
@@ -143,7 +172,8 @@ class IRC:
         except KeyError:
             return False
 
-    def is_part(self, event):
+    @staticmethod
+    def is_part_message(event):
         try:
             if event['event'] == 'part':
                 return True
@@ -152,7 +182,8 @@ class IRC:
         except KeyError:
             return False
 
-    def is_mode_message(self, event):
+    @staticmethod
+    def is_mode_message(event):
         try:
             if event['event'] == 'mode':
                 return True
@@ -161,12 +192,14 @@ class IRC:
         except KeyError:
             return False
 
-    def check_login_status(self, data):
+    @staticmethod
+    def check_login_status(data):
         if re.match(r'^:(testserver\.local|tmi\.twitch\.tv) NOTICE \* :Login unsuccessful\r\n$', data):
             return False
         else:
             return True
 
+    @staticmethod
     def send_message(self, channel, message):
         self.sock.send('PRIVMSG %s :%s\n' % (channel, message.encode('utf-8')))
 
@@ -207,7 +240,8 @@ class IRC:
 
         return sock
 
-    def channels_to_string(self, channel_list):
+    @staticmethod
+    def channels_to_string(channel_list):
         return ','.join(channel_list)
 
     def join_channels(self, channels):

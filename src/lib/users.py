@@ -35,33 +35,24 @@ class Users():
             self.add_to_channel(username, channel)
 
     def remove_from_channel(self, username, channel):
-        self.user_dict[channel]['users'].pop(username, None)
+        for d in self.user_dict[channel]['users']:
+            if d['username'] == username:
+                self.user_dict[channel]['users'].remove(d)
+                return True
+        return False
 
-    def mod_user(self, username, channel):
+    def update_mod_status(self, username, channel, status):
         found = False
         try:
             for user_info in self.user_dict[channel]['users']:
                 if user_info['username'] == username:
-                    user_info['mod'] = True
+                    user_info['mod'] = status
                     found = True
             if not found:
                 self.add_to_channel(username, channel)
         except KeyError:
             self.add_to_channel(username, channel)
-            self.mod_user(username, channel)
-
-    def unmod_user(self, channel, username):
-        found = False
-        try:
-            for user_info in self.user_dict[channel]['users']:
-                if user_info['username'] == username:
-                    user_info['mod'] = False
-                    found = True
-            if not found:
-                self.add_to_channel(username, channel)
-        except KeyError:
-            self.add_to_channel(username, channel)
-            self.mod_user(username, channel)
+            self.update_mod_status(username, channel, status)
 
     def update(self, username, channel):
         timestamp = time.time()
@@ -76,12 +67,3 @@ class Users():
         except KeyError:
             self.add_to_channel(username, channel)
             self.update(username, channel)
-
-    def add(self):
-        pass
-
-    def remove(self):
-        pass
-
-    def list(self):
-        pass
