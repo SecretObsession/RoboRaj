@@ -105,15 +105,31 @@ class Command():
         if self.commands[command]['return'] == 'command':
             return True
 
-    def pass_to_function(self, command, args, channel):
+    def pass_to_function(self, command, args, channel,
+                         user=None, users=None, commands=None, messages=None, twitch=None):
         command = command.replace('!', '')
         module = importlib.import_module('src.lib.commands.%s' % command)
         reload(module)
         function = getattr(module, command)
+        roboraj_obj = {
+            'Commands': commands,
+            'Messages': messages,
+            'Users': users,
+            'TwitchAPI': twitch,
+            'command_info': {
+                'command': command,
+                'args': args,
+                'channel': channel,
+                'user': user
+            }
+        }
         if args:
             if command == "addtextresponse":
                 response = function(args, self.commands)
                 self.save_command_memory()
+                return response
+            if command == "roboraj":
+                response = function(roboraj_obj)
                 return response
             # need to reference to src.lib.commands.<command
             return function(args)

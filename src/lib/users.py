@@ -8,6 +8,11 @@ class Users():
     def __init__(self):
         self.user_dict = {}
 
+    def list_users(self, channel=None):
+        if channel:
+            return self.user_dict[channel]['users']
+        return self.user_dict
+
     def channel_exists(self, channel):
         try:
             exists = self.user_dict[channel]['users']

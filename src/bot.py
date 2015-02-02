@@ -11,6 +11,7 @@ from lib.functions_general import *
 from lib.command import Command
 from lib.messages import Messages
 from lib.users import Users
+from lib.twitch import Twitch
 import sys
 import time
 import logging
@@ -25,6 +26,7 @@ class RoboRaj():
         self.commands_dict = self.Command.get_commands()
         self.Messages = Messages(save_type="sqlite")
         self.Users = Users()
+        self.Twitch = Twitch()
         logging.basicConfig(filename=log_filename,
                             level=logging.DEBUG,
                             format='%(asctime)s %(message)s',
@@ -100,7 +102,12 @@ class RoboRaj():
                                     else:
                                         logging.info('Command (%s) received by user (%s)'
                                                      % (command, username))
-                                        result = self.Command.pass_to_function(command, args, channel)
+                                        result = self.Command.pass_to_function(command, args, channel,
+                                                                               user=username,
+                                                                               users=self.Users,
+                                                                               messages=self.Messages,
+                                                                               commands=self.Command,
+                                                                               twitch=self.Twitch)
                                         self.Command.update_last_used(command, channel)
 
                                         if result:

@@ -199,7 +199,6 @@ class IRC:
         else:
             return True
 
-    @staticmethod
     def send_message(self, channel, message):
         self.sock.send('PRIVMSG %s :%s\n' % (channel, message.encode('utf-8')))
 
