@@ -135,7 +135,7 @@ class Command():
             return function(args)
         else:
             if command == "followers":
-                response = function(channel.replace('#', ''))
+                response = function(roboraj_obj)
                 return response
             # need to reference to src.lib.commands.<command
             return function()
