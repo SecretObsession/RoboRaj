@@ -12,6 +12,7 @@ from lib.command import Command
 from lib.messages import Messages
 from lib.users import Users
 from lib.twitch import Twitch
+from lib.points import Points
 import sys
 import time
 import logging
@@ -27,6 +28,7 @@ class RoboRaj():
         self.Messages = Messages(save_type="sqlite")
         self.Users = Users()
         self.Twitch = Twitch()
+        self.Points = Points(config=self.config, users=self.Users)
         logging.basicConfig(filename=log_filename,
                             level=logging.DEBUG,
                             format='%(asctime)s %(message)s',
@@ -107,7 +109,8 @@ class RoboRaj():
                                                                                users=self.Users,
                                                                                messages=self.Messages,
                                                                                commands=self.Command,
-                                                                               twitch=self.Twitch)
+                                                                               twitch=self.Twitch,
+                                                                               points=self.Points)
                                         self.Command.update_last_used(command, channel)
 
                                         if result:

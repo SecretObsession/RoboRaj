@@ -8,6 +8,7 @@ src/res/commands.json
 # Logs from previous Bot runs.
 log/*
 src/res/messages.db
+src/res/points.db
 
 # Created by https://www.gitignore.io
 

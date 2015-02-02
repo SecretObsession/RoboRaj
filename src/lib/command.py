@@ -106,7 +106,7 @@ class Command():
             return True
 
     def pass_to_function(self, command, args, channel,
-                         user=None, users=None, commands=None, messages=None, twitch=None):
+                         user=None, users=None, commands=None, messages=None, twitch=None, points=None):
         command = command.replace('!', '')
         module = importlib.import_module('src.lib.commands.%s' % command)
         reload(module)
@@ -116,6 +116,7 @@ class Command():
             'Messages': messages,
             'Users': users,
             'TwitchAPI': twitch,
+            'Points': points,
             'command_info': {
                 'command': command,
                 'args': args,

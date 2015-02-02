@@ -11,12 +11,19 @@ def roboraj(roboraj):
     Commands = roboraj['Commands']
     Messages = roboraj['Messages']
     Users = roboraj['Users']
+    Points = roboraj['Points']
 
     args = roboraj['command_info']['args']
     channel = roboraj['command_info']['channel']
     user = roboraj['command_info']['user']
 
-    if args[0] == "removecommand":
+    if args[0] == "grantpoints":
+        #add points to user's current count
+        current_points = Points.get_points(username=args[1], channel=channel)
+        new_point_value = current_points + int(args[2])
+        Points.set_points(username=args[1], channel=channel, points=new_point_value)
+
+    elif args[0] == "removecommand":
         Commands.remove_command(command=args[1])
         return "Command removed"
 
