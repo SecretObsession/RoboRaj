@@ -46,9 +46,9 @@ And then in `lib/commands/random.py` , write the following:
 ```python
 import random
 
-def random(args):
-  min = args[0]
-  max = args[1]
+def random(roboraj):
+  min = roboraj['command_info']['args'][0]
+  max = roboraj['command_info']['args'][1]
     
   usage = '!random <min> <max>'
   
