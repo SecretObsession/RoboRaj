@@ -7,14 +7,14 @@ from src.config.config import *
 from src.lib.command import Command
 
 
-def roboraj(robo_info):
-    Commands = robo_info['Commands']
-    Messages = robo_info['Messages']
-    Users = robo_info['Users']
+def roboraj(roboraj):
+    Commands = roboraj['Commands']
+    Messages = roboraj['Messages']
+    Users = roboraj['Users']
 
-    args = robo_info['command_info']['args']
-    channel = robo_info['command_info']['channel']
-    user = robo_info['command_info']['user']
+    args = roboraj['command_info']['args']
+    channel = roboraj['command_info']['channel']
+    user = roboraj['command_info']['user']
 
     if args[0] == "removecommand":
         Commands.remove_command(command=args[1])

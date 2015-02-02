@@ -6,7 +6,8 @@ GitHub: <https://github.com/singlerider/lorenzotherobot>
 import random
 import time
 
-def pokemon():
+
+def pokemon(roboraj):
     
     usage = '!pokemon'
     

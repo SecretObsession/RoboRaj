@@ -5,7 +5,8 @@ GitHub: <https://github.com/singlerider/lorenzotherobot>
 
 import random
 
-def opinion():
+
+def opinion(roboraj):
     usage = '!opinion'
     '''Return a random entry from the shuffled list'''
 

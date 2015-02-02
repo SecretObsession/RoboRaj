@@ -6,7 +6,8 @@ GitHub: <https://github.com/aidraj>
 from src.lib.command import Command
 from src.config.config import *
 
-def commands():
+
+def commands(roboraj):
     usage = '!commands'
     commands_dict = Command(config).get_commands()
 

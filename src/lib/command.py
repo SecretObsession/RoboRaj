@@ -123,19 +123,4 @@ class Command():
                 'user': user
             }
         }
-        if args:
-            if command == "addtextresponse":
-                response = function(args, self.commands)
-                self.save_command_memory()
-                return response
-            if command == "roboraj":
-                response = function(roboraj_obj)
-                return response
-            # need to reference to src.lib.commands.<command
-            return function(args)
-        else:
-            if command == "followers":
-                response = function(roboraj_obj)
-                return response
-            # need to reference to src.lib.commands.<command
-            return function()
+        return function(roboraj_obj)

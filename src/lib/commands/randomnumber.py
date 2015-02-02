@@ -8,7 +8,8 @@ import time
 
 random.seed(time.time())
 
-def randomnumber():
+
+def randomnumber(roboraj):
     usage = '!randomnumber'
       # carry out validation
     try:

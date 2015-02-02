@@ -8,7 +8,7 @@ import random
 import json
 
 
-def randomemote():
+def randomemote(roboraj):
     filename = 'src/res/global_emotes.json'
 
     try:
