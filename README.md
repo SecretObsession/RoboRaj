@@ -8,7 +8,6 @@ Installation
 ============
 * Open up your terminal/shell of choice.
 * Install the [http://docs.python-requests.org/en/latest/](Requests library) if you haven't already using `pip install requests`.
-* Install the [https://pypi.python.org/pypi/beautifulsoup4/](BeautifulSoup4 library) if you haven't already using `pip install beautifulsoup4`.
 * This application has been tested on Python 2.7.8.
 
 * Clone the Git repository.
